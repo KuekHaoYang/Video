@@ -155,21 +155,20 @@ function PlayerContent() {
       <nav className="sticky top-4 z-50 mx-4 mt-4 mb-8">
         <div className="max-w-7xl mx-auto bg-[var(--glass-bg)] backdrop-blur-[25px] saturate-[180%] border border-[var(--glass-border)] rounded-[var(--radius-2xl)] shadow-[0_4px_12px_color-mix(in_srgb,var(--shadow-color)_40%,transparent)] px-6 py-4">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <Button 
-                variant="secondary" 
+            <div className="flex items-center gap-4">
+              <button 
                 onClick={() => router.push('/')}
-                className="flex items-center gap-2 p-2 w-10 h-10"
+                className="flex items-center justify-center hover:opacity-80 transition-opacity"
                 title="返回首页"
               >
                 <Image 
                   src="/icon.png" 
                   alt="KVideo" 
-                  width={24} 
-                  height={24}
+                  width={40} 
+                  height={40}
                   className="object-contain"
                 />
-              </Button>
+              </button>
               <Button 
                 variant="secondary" 
                 onClick={() => router.back()}
