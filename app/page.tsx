@@ -60,9 +60,9 @@ function HomePage() {
         setAvailableSources(cached.availableSources);
         setHasSearched(true);
       } else {
-        // Trigger automatic search for URL query
+        // Trigger automatic search for URL query (won't clear cache, will use existing if valid)
         console.log('🔍 Auto-searching for URL query:', urlQuery);
-        setTimeout(() => performSearch(urlQuery), 100);
+        setTimeout(() => performSearch(urlQuery, false), 100);
       }
     } else if (cached) {
       // No URL query but cache exists - restore last search
@@ -113,8 +113,17 @@ function HomePage() {
     }
   };
 
-  const performSearch = async (searchQuery: string) => {
+  const performSearch = async (searchQuery: string, shouldClearCache: boolean = true) => {
     if (!searchQuery.trim() || loading) return;
+
+    // Only clear cache if user manually clicked search button
+    if (shouldClearCache) {
+      const cached = loadFromCache();
+      if (cached && cached.query === searchQuery) {
+        console.log('🗑️ Clearing old cache for manual search');
+        localStorage.removeItem(CACHE_KEY);
+      }
+    }
 
     // Abort any previous search
     if (abortControllerRef.current) {
@@ -278,7 +287,8 @@ function HomePage() {
 
   const handleSearch = async (e: React.FormEvent) => {
     e.preventDefault();
-    await performSearch(query);
+    // Pass true to clear cache when user manually clicks search
+    await performSearch(query, true);
   };
 
   const getSourceName = (sourceId: string): string => {
@@ -309,7 +319,17 @@ function HomePage() {
       <nav className="sticky top-4 z-50 mx-4 mt-4 mb-8">
         <div className="max-w-7xl mx-auto bg-[var(--glass-bg)] backdrop-blur-[25px] saturate-[180%] [-webkit-backdrop-filter:blur(25px)_saturate(180%)] border border-[var(--glass-border)] shadow-[var(--shadow-md)] px-6 py-4 transition-all duration-[var(--transition-fluid)]" style={{ borderRadius: 'var(--radius-2xl)' }}>
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-3">
+            <Link 
+              href="/" 
+              className="flex items-center gap-3 hover:opacity-80 transition-opacity cursor-pointer"
+              onClick={() => {
+                // Don't clear cache when clicking home - just reset the view
+                setQuery('');
+                setResults([]);
+                setAvailableSources([]);
+                setHasSearched(false);
+              }}
+            >
               <div className="w-10 h-10 relative flex items-center justify-center">
                 <Image 
                   src="/icon.png" 
@@ -325,7 +345,7 @@ function HomePage() {
                 </h1>
                 <p className="text-xs text-[var(--text-color-secondary)]">视频聚合平台</p>
               </div>
-            </div>
+            </Link>
             <ThemeSwitcher />
           </div>
         </div>
