@@ -7,7 +7,7 @@
  * Get all focusable elements within a container
  * 获取容器内所有可聚焦的元素
  */
-export function getFocusableElements(container: HTMLElement): HTMLElement[] {
+function getFocusableElements(container: HTMLElement): HTMLElement[] {
   const selector = [
     'a[href]',
     'button:not([disabled])',
@@ -75,39 +75,5 @@ export function trapFocus(container: HTMLElement): () => void {
   // Return cleanup function
   return () => {
     container.removeEventListener('keydown', handleKeyDown);
-  };
-}
-
-/**
- * Restore focus to a previously focused element
- * 恢复焦点到之前聚焦的元素
- * 
- * @param element The element to restore focus to
- */
-export function restoreFocus(element: HTMLElement | null): void {
-  if (!element) return;
-
-  // Use requestAnimationFrame to ensure the element is ready
-  requestAnimationFrame(() => {
-    if (element && typeof element.focus === 'function') {
-      element.focus();
-    }
-  });
-}
-
-/**
- * Save and restore focus for a component lifecycle
- * 保存并恢复组件生命周期的焦点
- * 
- * Usage:
- * const focusManager = saveFocus();
- * // ... do something that changes focus
- * focusManager.restore();
- */
-export function saveFocus() {
-  const previouslyFocused = document.activeElement as HTMLElement | null;
-
-  return {
-    restore: () => restoreFocus(previouslyFocused),
   };
 }

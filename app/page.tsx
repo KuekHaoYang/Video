@@ -7,7 +7,6 @@ import Image from 'next/image';
 import { ThemeSwitcher } from '@/components/ThemeSwitcher';
 import { SearchForm } from '@/components/search/SearchForm';
 import { VideoGrid } from '@/components/search/VideoGrid';
-import { EmptyState } from '@/components/search/EmptyState';
 import { NoResults } from '@/components/search/NoResults';
 import { ResultsHeader } from '@/components/search/ResultsHeader';
 import { TypeBadges } from '@/components/search/TypeBadges';

@@ -10,7 +10,6 @@ import type {
   Episode,
   ApiSearchResponse,
   ApiDetailResponse,
-  ApiError,
 } from '@/lib/types';
 
 const REQUEST_TIMEOUT = 15000;
@@ -115,11 +114,12 @@ async function searchVideosBySource(
     };
   } catch (error) {
     console.error(`Search failed for source ${source.name}:`, error);
-    throw createApiError(
-      'SEARCH_FAILED',
-      `Failed to search from ${source.name}`,
-      source.id
-    );
+    throw {
+      code: 'SEARCH_FAILED',
+      message: `Failed to search from ${source.name}`,
+      source: source.id,
+      retryable: true,
+    };
   }
 }
 
@@ -168,24 +168,6 @@ function parseEpisodes(playUrl: string): Episode[] {
     console.error('Failed to parse episodes:', error);
     return [];
   }
-}
-
-/**
- * Extract M3U8 URLs from various formats
- */
-function extractM3U8Urls(playUrl: string): string[] {
-  const urls: string[] = [];
-  
-  // Split by common delimiters
-  const parts = playUrl.split(/[#$]/);
-  
-  for (const part of parts) {
-    if (part.includes('.m3u8') || part.startsWith('http')) {
-      urls.push(part.trim());
-    }
-  }
-  
-  return urls;
 }
 
 /**
@@ -259,11 +241,12 @@ export async function getVideoDetail(
     };
   } catch (error) {
     console.error(`Detail fetch failed for source ${source.name}:`, error);
-    throw createApiError(
-      'DETAIL_FAILED',
-      `Failed to fetch video detail from ${source.name}`,
-      source.id
-    );
+    throw {
+      code: 'DETAIL_FAILED',
+      message: `Failed to fetch video detail from ${source.name}`,
+      source: source.id,
+      retryable: false,
+    };
   }
 }
 
@@ -283,51 +266,4 @@ export async function getVideoDetailCustom(
   };
 
   return getVideoDetail(id, customSource);
-}
-
-/**
- * Test if a video URL is accessible
- */
-export async function testVideoUrl(url: string): Promise<boolean> {
-  try {
-    const response = await fetchWithTimeout(url, { method: 'HEAD' }, 5000);
-    return response.ok;
-  } catch {
-    return false;
-  }
-}
-
-/**
- * Create standardized API error
- */
-function createApiError(
-  code: string,
-  message: string,
-  source?: string
-): ApiError {
-  return {
-    code,
-    message,
-    source,
-    retryable: code === 'TIMEOUT' || code === 'NETWORK_ERROR',
-  };
-}
-
-/**
- * Normalize video data across different API formats
- */
-export function normalizeVideoData(data: any, sourceId: string): VideoItem {
-  return {
-    vod_id: data.vod_id || data.id,
-    vod_name: data.vod_name || data.name || data.title,
-    vod_pic: data.vod_pic || data.pic || data.poster || data.image,
-    type_name: data.type_name || data.type || data.category,
-    vod_remarks: data.vod_remarks || data.remarks || data.note,
-    vod_year: data.vod_year || data.year,
-    vod_area: data.vod_area || data.area || data.region,
-    vod_actor: data.vod_actor || data.actor,
-    vod_director: data.vod_director || data.director,
-    vod_content: data.vod_content || data.content || data.description,
-    source: sourceId,
-  };
 }

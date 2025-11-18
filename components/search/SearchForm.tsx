@@ -5,8 +5,6 @@ import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
 import { Icons } from '@/components/ui/Icon';
 import { SearchLoadingAnimation } from '@/components/SearchLoadingAnimation';
-import { SearchHistoryDropdown } from '@/components/search/SearchHistoryDropdown';
-import { useSearchHistoryStore } from '@/lib/store/search-history-store';
 
 interface SearchFormProps {
   onSearch: (query: string) => void;
@@ -28,10 +26,7 @@ export function SearchForm({
   totalSources = 16,
 }: SearchFormProps) {
   const [query, setQuery] = useState(initialQuery);
-  const [showHistory, setShowHistory] = useState(false);
-  const [inputRect, setInputRect] = useState<DOMRect | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  const { addSearchHistory } = useSearchHistoryStore();
 
   // Update query when initialQuery changes
   useEffect(() => {
@@ -41,9 +36,7 @@ export function SearchForm({
   const handleSubmit = (e: FormEvent) => {
     e.preventDefault();
     if (query.trim() && !isLoading) {
-      addSearchHistory(query.trim());
       onSearch(query);
-      setShowHistory(false);
     }
   };
 
@@ -52,20 +45,6 @@ export function SearchForm({
     if (onClear) {
       onClear();
     }
-    setShowHistory(false);
-  };
-
-  const handleInputFocus = () => {
-    if (inputRef.current) {
-      setInputRect(inputRef.current.getBoundingClientRect());
-      setShowHistory(true);
-    }
-  };
-
-  const handleHistorySelect = (selectedQuery: string) => {
-    setQuery(selectedQuery);
-    setShowHistory(false);
-    onSearch(selectedQuery);
   };
 
   return (
@@ -76,13 +55,8 @@ export function SearchForm({
           type="text"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          onFocus={handleInputFocus}
           placeholder="搜索电影、电视剧、综艺..."
           className="text-base sm:text-lg pr-24 md:pr-32 truncate"
-          role="combobox"
-          aria-expanded={showHistory && !isLoading}
-          aria-controls="search-history-listbox"
-          aria-autocomplete="list"
           aria-label="搜索视频内容"
         />
         {query && (
@@ -107,14 +81,6 @@ export function SearchForm({
           </span>
         </Button>
       </div>
-
-      {/* Search History Dropdown */}
-      <SearchHistoryDropdown
-        isVisible={showHistory && !isLoading}
-        onSelect={handleHistorySelect}
-        onClose={() => setShowHistory(false)}
-        inputRect={inputRect}
-      />
       
       {/* Loading Animation */}
       {isLoading && (

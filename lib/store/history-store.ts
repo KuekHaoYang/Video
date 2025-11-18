@@ -167,13 +167,3 @@ export const useHistoryStore = create<HistoryStore>()(
     }
   )
 );
-
-// Selector hooks
-export const useViewingHistory = () => useHistoryStore((state) => state.viewingHistory);
-export const useHistoryActions = () =>
-  useHistoryStore((state) => ({
-    addToHistory: state.addToHistory,
-    updateProgress: state.updateProgress,
-    removeFromHistory: state.removeFromHistory,
-    clearHistory: state.clearHistory,
-  }));

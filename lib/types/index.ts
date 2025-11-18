@@ -53,24 +53,6 @@ export interface VideoDetail {
   source_code: string;
 }
 
-// Playback State
-export interface PlayerState {
-  currentVideo: {
-    id: string | number;
-    title: string;
-    url: string;
-    source: string;
-    episodeIndex: number;
-  } | null;
-  episodes: Episode[];
-  playbackPosition: number;
-  duration: number;
-  isPlaying: boolean;
-  autoplayNext: boolean;
-  volume: number;
-  playbackRate: number;
-}
-
 // History Entry
 export interface VideoHistoryItem {
   videoId: string | number;
@@ -116,20 +98,6 @@ export interface ApiDetailResponse {
   }>;
 }
 
-// Search Request/Response Types
-export interface SearchRequest {
-  query: string;
-  sources: string[];
-  page?: number;
-}
-
-export interface SearchResult {
-  results: VideoItem[];
-  source: string;
-  responseTime?: number;
-  error?: string;
-}
-
 // Detail Request Types
 export interface DetailRequest {
   id: string | number;
@@ -137,35 +105,3 @@ export interface DetailRequest {
   customApi?: string;
 }
 
-// Source Speed Test Result
-export interface SourceSpeedResult {
-  source: string;
-  sourceName: string;
-  speed: number; // milliseconds
-  available: boolean;
-  error?: string;
-  videoDetail?: VideoDetail;
-}
-
-// Error Types
-export interface ApiError {
-  code: string;
-  message: string;
-  source?: string;
-  retryable: boolean;
-}
-
-// Progress Storage
-export interface VideoProgress {
-  videoId: string | number;
-  position: number;
-  duration: number;
-  timestamp: number;
-  episodeIndex: number;
-}
-
-// Custom Source Configuration
-export interface CustomSourceConfig {
-  sources: VideoSource[];
-  lastUpdated: number;
-}
