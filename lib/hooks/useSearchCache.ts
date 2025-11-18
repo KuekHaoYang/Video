@@ -11,8 +11,6 @@ const CACHE_KEY = 'kvideo_search_cache';
 const CACHE_DURATION = 10 * 60 * 1000; // 10 minutes
 
 export function useSearchCache() {
-  const hasLoadedCache = useRef(false);
-
   const saveToCache = (
     query: string,
     results: any[],
@@ -53,19 +51,8 @@ export function useSearchCache() {
     }
   };
 
-  const clearCache = () => {
-    try {
-      localStorage.removeItem(CACHE_KEY);
-      console.log('🗑️ Cache cleared');
-    } catch (error) {
-      console.error('Failed to clear cache:', error);
-    }
-  };
-
   return {
     saveToCache,
     loadFromCache,
-    clearCache,
-    hasLoadedCache,
   };
 }

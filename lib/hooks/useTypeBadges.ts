@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useMemo, useCallback, useTransition } from 'react';
+import { useState, useEffect, useMemo, useCallback } from 'react';
 
 interface TypeBadge {
   type: string;
@@ -19,7 +19,6 @@ interface TypeBadge {
  */
 export function useTypeBadges<T extends { type_name?: string }>(videos: T[]) {
   const [selectedTypes, setSelectedTypes] = useState<Set<string>>(new Set());
-  const [isPending, startTransition] = useTransition();
 
   // Collect and count type badges from videos
   const typeBadges = useMemo<TypeBadge[]>(() => {
@@ -50,7 +49,6 @@ export function useTypeBadges<T extends { type_name?: string }>(videos: T[]) {
   }, [videos, selectedTypes]);
 
   // Toggle type selection - useCallback to prevent re-creation
-  // Use startTransition to make UI feel responsive
   const toggleType = useCallback((type: string) => {
     // Update selected types immediately (high priority)
     setSelectedTypes(prev => {
@@ -62,11 +60,6 @@ export function useTypeBadges<T extends { type_name?: string }>(videos: T[]) {
       }
       return newSet;
     });
-  }, []);
-
-  // Clear all selections - useCallback to prevent re-creation
-  const clearSelection = useCallback(() => {
-    setSelectedTypes(new Set());
   }, []);
 
   // Auto-cleanup: remove selected types that no longer exist in badges
@@ -91,8 +84,5 @@ export function useTypeBadges<T extends { type_name?: string }>(videos: T[]) {
     selectedTypes,
     filteredVideos,
     toggleType,
-    clearSelection,
-    hasFilters: selectedTypes.size > 0,
-    isPending, // Export pending state
   };
 }

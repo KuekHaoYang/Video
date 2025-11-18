@@ -46,11 +46,6 @@ export function useSourceBadges<T extends { source?: string; sourceName?: string
     });
   }, []);
 
-  // Clear all selections
-  const clearSelection = useCallback(() => {
-    setSelectedSources(new Set());
-  }, []);
-
   // Auto-cleanup: remove selected sources that no longer exist
   useEffect(() => {
     const availableSourceIds = new Set(availableSources.map(s => s.id));
@@ -72,7 +67,5 @@ export function useSourceBadges<T extends { source?: string; sourceName?: string
     selectedSources,
     filteredVideos,
     toggleSource,
-    clearSelection,
-    hasFilters: selectedSources.size > 0,
   };
 }
