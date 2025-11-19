@@ -1,5 +1,5 @@
 /**
- * TypeBadgeList - Badge list container with responsive layout
+ * SourceBadgeList - Badge list container with responsive layout
  * Desktop: Expandable grid with show more/less
  * Mobile: Horizontal scroll with snap
  */
@@ -8,21 +8,22 @@
 
 import { useState, useRef, useCallback } from 'react';
 import { Icons } from '@/components/ui/Icon';
-import { TypeBadgeItem } from './TypeBadgeItem';
+import { SourceBadgeItem } from './SourceBadgeItem';
 import { useKeyboardNavigation } from '@/lib/hooks/useKeyboardNavigation';
 
-interface TypeBadge {
-  type: string;
+interface Source {
+  id: string;
+  name: string;
   count: number;
 }
 
-interface TypeBadgeListProps {
-  badges: TypeBadge[];
-  selectedTypes: Set<string>;
-  onToggleType: (type: string) => void;
+interface SourceBadgeListProps {
+  sources: Source[];
+  selectedSources: Set<string>;
+  onToggleSource: (sourceId: string) => void;
 }
 
-export function TypeBadgeList({ badges, selectedTypes, onToggleType }: TypeBadgeListProps) {
+export function SourceBadgeList({ sources, selectedSources, onToggleSource }: SourceBadgeListProps) {
   const [isExpanded, setIsExpanded] = useState(false);
   const [focusedIndex, setFocusedIndex] = useState(-1);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -33,7 +34,7 @@ export function TypeBadgeList({ badges, selectedTypes, onToggleType }: TypeBadge
     enabled: true,
     containerRef: containerRef,
     currentIndex: focusedIndex,
-    itemCount: badges.length,
+    itemCount: sources.length,
     orientation: 'horizontal',
     onNavigate: useCallback((index: number) => {
       setFocusedIndex(index);
@@ -46,8 +47,8 @@ export function TypeBadgeList({ badges, selectedTypes, onToggleType }: TypeBadge
       });
     }, []),
     onSelect: useCallback((index: number) => {
-      onToggleType(badges[index].type);
-    }, [badges, onToggleType]),
+      onToggleSource(sources[index].id);
+    }, [sources, onToggleSource]),
   });
 
   return (
@@ -57,26 +58,27 @@ export function TypeBadgeList({ badges, selectedTypes, onToggleType }: TypeBadge
         ref={containerRef}
         className="hidden md:flex md:flex-col md:flex-1 -mx-1 px-1"
         role="group"
-        aria-label="类型筛选"
+        aria-label="视频源筛选"
       >
         <div className={`flex items-center gap-2 flex-wrap transition-all duration-300 ${
           !isExpanded ? 'max-h-[3rem] overflow-hidden' : ''
         }`}>
-          {badges.map((badge, index) => (
-            <TypeBadgeItem
-              key={badge.type}
-              type={badge.type}
-              count={badge.count}
-              isSelected={selectedTypes.has(badge.type)}
-              onToggle={() => onToggleType(badge.type)}
+          {sources.map((source, index) => (
+            <SourceBadgeItem
+              key={source.id}
+              id={source.id}
+              name={source.name}
+              count={source.count}
+              isSelected={selectedSources.has(source.id)}
+              onToggle={() => onToggleSource(source.id)}
               isFocused={focusedIndex === index}
               onFocus={() => setFocusedIndex(index)}
-              innerRef={(el) => { badgeRefs.current[index] = el; }}
+              innerRef={(el: HTMLButtonElement | null) => { badgeRefs.current[index] = el; }}
             />
           ))}
         </div>
         
-        {badges.length > 5 && (
+        {sources.length > 5 && (
           <button
             onClick={() => setIsExpanded(!isExpanded)}
             className="mt-2 text-xs text-[var(--text-color-secondary)] hover:text-[var(--accent-color)] 
@@ -95,22 +97,23 @@ export function TypeBadgeList({ badges, selectedTypes, onToggleType }: TypeBadge
       <div 
         className="flex md:hidden flex-1 -mx-1 px-1 overflow-hidden"
         role="group"
-        aria-label="类型筛选"
+        aria-label="视频源筛选"
       >
         <div 
           ref={containerRef}
           className="flex items-center gap-2 overflow-x-auto pb-2 scrollbar-hide snap-x snap-mandatory"
         >
-          {badges.map((badge, index) => (
-            <TypeBadgeItem
-              key={badge.type}
-              type={badge.type}
-              count={badge.count}
-              isSelected={selectedTypes.has(badge.type)}
-              onToggle={() => onToggleType(badge.type)}
+          {sources.map((source, index) => (
+            <SourceBadgeItem
+              key={source.id}
+              id={source.id}
+              name={source.name}
+              count={source.count}
+              isSelected={selectedSources.has(source.id)}
+              onToggle={() => onToggleSource(source.id)}
               isFocused={focusedIndex === index}
               onFocus={() => setFocusedIndex(index)}
-              innerRef={(el) => { badgeRefs.current[index] = el; }}
+              innerRef={(el: HTMLButtonElement | null) => { badgeRefs.current[index] = el; }}
             />
           ))}
         </div>

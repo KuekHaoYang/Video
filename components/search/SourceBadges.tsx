@@ -2,15 +2,15 @@
  * SourceBadges - Clickable video source badges with filtering
  * Shows available video sources with counts
  * Click to filter videos by source
- * Similar functionality to TypeBadges
+ * Responsive: Desktop shows expand/collapse, Mobile shows horizontal scroll
  */
 
 'use client';
 
 import { memo } from 'react';
 import { Card } from '@/components/ui/Card';
-import { Badge } from '@/components/ui/Badge';
 import { Icons } from '@/components/ui/Icon';
+import { SourceBadgeList } from './SourceBadgeList';
 
 interface Source {
   id: string;
@@ -52,43 +52,11 @@ export const SourceBadges = memo(function SourceBadges({
           </span>
         </div>
         
-        <div className="flex-1 flex items-center gap-2 flex-wrap">
-          {sources.map((source) => {
-            const isSelected = selectedSources.has(source.id);
-            
-            return (
-              <button
-                key={source.id}
-                onClick={() => onToggleSource(source.id)}
-                className={`
-                  inline-flex items-center gap-1.5 px-4 py-2
-                  rounded-full
-                  border-2
-                  text-sm font-medium whitespace-nowrap
-                  transition-all duration-200 ease-out
-                  hover:scale-105 hover:shadow-[var(--shadow-sm)]
-                  active:scale-95
-                  focus:outline-none
-                  ${isSelected 
-                    ? 'bg-[var(--accent-color)] text-white border-[var(--accent-color)] shadow-md' 
-                    : 'bg-[var(--glass-bg)] text-[var(--text-color)] border-[var(--glass-border)] hover:border-[var(--accent-color)]'
-                  }
-                `}
-              >
-                <span>{source.name}</span>
-                <span className={`
-                  px-2 py-0.5 rounded-full text-xs font-semibold
-                  ${isSelected 
-                    ? 'bg-white/20 text-white' 
-                    : 'bg-[var(--accent-color)]/10 text-[var(--accent-color)]'
-                  }
-                `}>
-                  {source.count}
-                </span>
-              </button>
-            );
-          })}
-        </div>
+        <SourceBadgeList
+          sources={sources}
+          selectedSources={selectedSources}
+          onToggleSource={onToggleSource}
+        />
       </div>
       
       {selectedSources.size > 0 && (
