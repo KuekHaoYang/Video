@@ -12,7 +12,7 @@ export function SourceManager({ sources, onSourcesChange }: SourceManagerProps) 
   const [editingId, setEditingId] = useState<string | null>(null);
 
   const handleToggle = (id: string) => {
-    const updated = sources.map(s => 
+    const updated = sources.map(s =>
       s.id === id ? { ...s, enabled: !s.enabled } : s
     );
     onSourcesChange(updated);
@@ -32,7 +32,7 @@ export function SourceManager({ sources, onSourcesChange }: SourceManagerProps) 
 
     const updated = [...sources];
     [updated[currentIndex], updated[newIndex]] = [updated[newIndex], updated[currentIndex]];
-    
+
     // Update priorities
     updated.forEach((s, idx) => s.priority = idx + 1);
     onSourcesChange(updated);
@@ -54,16 +54,14 @@ export function SourceManager({ sources, onSourcesChange }: SourceManagerProps) 
                 aria-label={`Toggle ${source.name}`}
               >
                 <span
-                  className={`absolute inset-0 rounded-[var(--radius-full)] transition-all duration-[0.4s] cubic-bezier(0.2,0.8,0.2,1) ${
-                    source.enabled 
-                      ? 'bg-[var(--accent-color)]' 
+                  className={`absolute inset-0 rounded-[var(--radius-full)] transition-all duration-[0.4s] cubic-bezier(0.2,0.8,0.2,1) ${source.enabled
+                      ? 'bg-[var(--accent-color)]'
                       : 'bg-[color-mix(in_srgb,var(--text-color)_20%,transparent)]'
-                  }`}
+                    }`}
                 />
                 <span
-                  className={`absolute top-0.5 left-0.5 w-6 h-6 bg-white rounded-[var(--radius-full)] shadow-sm transition-transform duration-[0.4s] cubic-bezier(0.2,0.8,0.2,1) ${
-                    source.enabled ? 'translate-x-5' : 'translate-x-0'
-                  }`}
+                  className={`absolute top-0.5 left-0.5 w-6 h-6 bg-white rounded-[var(--radius-full)] shadow-sm transition-transform duration-[0.4s] cubic-bezier(0.2,0.8,0.2,1) ${source.enabled ? 'translate-x-5' : 'translate-x-0'
+                    }`}
                 />
               </button>
 
@@ -88,10 +86,10 @@ export function SourceManager({ sources, onSourcesChange }: SourceManagerProps) 
                 aria-label="Move up"
               >
                 <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M12 19V5M5 12l7-7 7 7"/>
+                  <path d="M12 19V5M5 12l7-7 7 7" />
                 </svg>
               </button>
-              
+
               <button
                 onClick={() => handlePriorityChange(source.id, 'down')}
                 disabled={index === sources.length - 1}
@@ -99,7 +97,7 @@ export function SourceManager({ sources, onSourcesChange }: SourceManagerProps) 
                 aria-label="Move down"
               >
                 <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M12 5v14M19 12l-7 7-7-7"/>
+                  <path d="M12 5v14M19 12l-7 7-7-7" />
                 </svg>
               </button>
 
@@ -110,7 +108,7 @@ export function SourceManager({ sources, onSourcesChange }: SourceManagerProps) 
                 aria-label="Delete source"
               >
                 <svg className="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                  <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/>
+                  <path d="M3 6h18M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2" />
                 </svg>
               </button>
             </div>
